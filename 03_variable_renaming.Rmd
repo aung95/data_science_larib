@@ -1,0 +1,68 @@
+---
+title: "03_variable_renaming"
+author: "Alexandre Unger"
+date: "`r Sys.Date()`"
+code_folding : "hide"
+keep_md: no
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# download data
+Aim: download the data from the fake dataset I provided (data_test.RData)
+```{r loading the data}
+load("df.RData") # loading the dataset who is already in R
+```
+
+# renaming data without dplyr (using basics R)
+```{r variable renaming without dpyr}
+# first check the colnames of the data
+colnames(df)
+
+# we create a new dataset with renamed variable
+df_renamed <- df 
+
+# we will use the basics package, you se it is a bit complicate 
+names(df_renamed)[names(df_renamed) == "Death (0=No; 1=Yes)"] <- "event" 
+
+# let's use the easiest way (see next point)
+```
+
+# using dplyr
+```{r variable renaming with dplyr}
+# load the package
+library(dplyr)
+# if package not installed, use the following line
+# install.packages("dplyr)
+
+# with dplyr, it is easier since there the "rename" variable
+
+df_renamed_dplyr <- df %>% 
+  rename(
+    event = `Death (0=No; 1=Yes)`
+)
+
+# you see much more easy, let is do that for all variable then
+df_renamed_dplyr <- df %>% 
+  rename(
+    event = `Death (0=No; 1=Yes)`,
+    time = `Delai du suivi avant la mort ou dernier contact vivant (months)`,
+    demo_gender = `Sex (0= Females; 1=Males)`,
+    demo_age = `Age at baseline (years)`,
+    demo_BMI = `BMI (kg/m2)`,
+    CMR_LVEF = `LVEF (%)`,
+    CMR_LV_mass = `LV mass indexed (g/m2)`,
+    CMR_LGE_ischemic_presence = `Presence of ischemic LGE (0= No; 1=Yes)`,
+    CMR_LGE_ischemic_extent = `Number of segments of ischemic LGE`,
+    CMR_LGE_ischemic_transmurality = `Topography of ischemic LGE (0= No LGE; 1=subendocardial <50%; 2=subendocardial 50-99%; 3=transmural)`,
+)
+
+# See the colnames now
+colnames(df_renamed_dplyr)
+
+# You see it is much cleaner
+```
+
